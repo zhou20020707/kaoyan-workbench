@@ -224,6 +224,16 @@ input,select,textarea{font-family:inherit}
 .prog-btns{display:flex;gap:4px}
 .prog-btn{flex:1;padding:3px 0;font-size:10px;border-radius:5px;background:var(--card);border:1px solid var(--border);color:var(--text2);cursor:pointer}
 .prog-btn.active{color:#fff;border-color:transparent}
+.prog-parts{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.prog-part{background:var(--card);border-radius:8px;padding:10px 12px}
+.prog-part .pp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.prog-part .pp-name{font-size:12px;font-weight:500;color:var(--text2)}
+.prog-part .pp-pct{font-size:11px;font-weight:600}
+.prog-part .pp-bar{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.prog-part .pp-bar .fill{height:100%;border-radius:3px;transition:width .5s}
+.prog-part .pp-btns{display:flex;gap:3px}
+.prog-part .pp-btn{flex:1;padding:2px 0;font-size:9px;border-radius:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text3);cursor:pointer}
+.prog-part .pp-btn.active{color:#fff;border-color:transparent}
 
 /* notes */
 .note-area{width:100%;min-height:70px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:12px;resize:vertical}
@@ -598,15 +608,49 @@ const SUBJECTS = {
   pol:{name:'政治',color:'#ffa94d',cls:'tag-pol',full:100,icon:'📋'},
   stat:{name:'统计学',color:'#ff7eb3',cls:'tag-stat',full:150,icon:'📊'},
 };
+const PROGRESS_PARTS = {
+  math:[
+    {id:'calculus',name:'高等数学'},
+    {id:'linear',name:'线性代数'},
+    {id:'probability',name:'概率论与数理统计'},
+  ],
+  eng:[
+    {id:'vocab',name:'词汇'},
+    {id:'grammar',name:'长难句/语法'},
+    {id:'reading',name:'真题阅读'},
+    {id:'writing',name:'作文/翻译'},
+  ],
+  pol:[
+    {id:'marx',name:'马克思主义基本原理'},
+    {id:'maozhong',name:'毛中特'},
+    {id:'history',name:'中国近现代史纲要'},
+    {id:'sixiu',name:'思想道德与法治'},
+    {id:'shizheng',name:'形势与政策/时政'},
+  ],
+  stat:[
+    {id:'descriptive',name:'描述统计'},
+    {id:'inferential',name:'推断统计'},
+    {id:'regression',name:'回归分析'},
+    {id:'timeseries',name:'时间序列分析'},
+  ],
+};
 const QUOTES=['日拱一卒，功不唐捐。','行百里者半九十，慎终如始。','不怕慢，就怕站。','今天比昨天更好一点就够了。','星光不问赶路人。','所有毫不费力背后都是拼尽全力。','与其担心未来不如现在努力。','坚持下去就赢了大半。','把简单的事做到极致。','每日精进，水滴石穿。'];
 
 const STORE_KEY = 'kypt_data_v2';
 
 function getDefaultDB(){
   return {
-    tasks:{}, notes:{}, scores:[], progress:{math:0,eng:0,pol:0,stat:0},
-    life:{}, sidebar:[], sidebarGroups:[], _version:2
+    tasks:{}, notes:{}, scores:[], progress:getDefaultProgress(),
+    life:{}, sidebar:[], sidebarGroups:[], _version:3
   };
+}
+function getDefaultProgress(){
+  const p = {};
+  Object.entries(PROGRESS_PARTS).forEach(([k,parts])=>{
+    p[k] = {};
+    parts.forEach(pt => { p[k][pt.id] = 0; });
+  });
+  return p;
 }
 
 const DEFAULT_SIDEBAR = [
@@ -628,6 +672,7 @@ const DEFAULT_GROUPS = [
 
 function migrateData(db){
   if(!db) db = getDefaultDB();
+  // v1 -> v2
   if(!db._version || db._version < 2){
     Object.values(db.tasks||{}).forEach(dayTasks=>{
       dayTasks.forEach(t=>{
@@ -639,6 +684,20 @@ function migrateData(db){
     if(!db.sidebar || !db.sidebar.length) db.sidebar = JSON.parse(JSON.stringify(DEFAULT_SIDEBAR));
     if(!db.sidebarGroups || !db.sidebarGroups.length) db.sidebarGroups = JSON.parse(JSON.stringify(DEFAULT_GROUPS));
     db._version = 2;
+  }
+  // v2 -> v3: progress 从单值改为子部分结构
+  if(db._version < 3){
+    const newProg = getDefaultProgress();
+    Object.keys(newProg).forEach(sub=>{
+      // 如果旧格式是数字，均匀分配到各子部分
+      const oldVal = db.progress && typeof db.progress[sub] === 'number' ? db.progress[sub] : 0;
+      if(oldVal > 0){
+        // 旧值作为整体进度，各子部分设为相同值
+        Object.keys(newProg[sub]).forEach(pid => { newProg[sub][pid] = oldVal; });
+      }
+    });
+    db.progress = newProg;
+    db._version = 3;
   }
   return db;
 }
@@ -954,7 +1013,7 @@ function renderSubjectCards(){
   const tasks = DB.tasks[ds]||[];
   const el = document.getElementById('subjectCards');
   el.innerHTML = Object.entries(SUBJECTS).map(([k,v])=>{
-    const p = DB.progress[k]||0;
+    const p = getSubjectProgress(k);
     const todayH = tasks.filter(t=>t.subject===k).reduce((s,t)=>s+(Number(t.duration)||0),0);
     const todayDone = tasks.filter(t=>t.subject===k && t.done).length;
     const todayTotal = tasks.filter(t=>t.subject===k).length;
@@ -1054,21 +1113,41 @@ function renderTrendChart(trend){
 }
 
 /* ---- progress ---- */
+function getSubjectProgress(sub){
+  const parts = DB.progress[sub]||{};
+  const vals = Object.values(parts);
+  if(!vals.length) return 0;
+  return Math.round(vals.reduce((a,b)=>a+(Number(b)||0),0)/vals.length);
+}
+
 function renderProgress(){
-  const targets = {math:'高等数学+线代+概率论',eng:'词汇+长难句+真题阅读+作文',pol:'马原+毛中特+史纲+思修+时政',stat:'描述统计+推断统计+回归+时间序列'};
   document.getElementById('progressList').innerHTML = Object.entries(SUBJECTS).map(([k,v])=>{
-    const p = DB.progress[k]||0;
+    const p = getSubjectProgress(k);
+    const parts = PROGRESS_PARTS[k]||[];
+    const partsHtml = parts.map(pt=>{
+      const pp = (DB.progress[k]&&DB.progress[k][pt.id])||0;
+      return `<div class="prog-part">
+        <div class="pp-top"><span class="pp-name">${pt.name}</span><span class="pp-pct" style="color:${v.color}">${pp}%</span></div>
+        <div class="pp-bar"><div class="fill" style="width:${pp}%;background:${v.color}"></div></div>
+        <div class="pp-btns">${[0,25,50,75,100].map(v2=>`<button class="pp-btn ${pp===v2?'active':''}" data-sub="${k}" data-part="${pt.id}" data-p="${v2}" style="${pp===v2?'background:'+v.color+';color:#fff':''}">${v2}</button>`).join('')}</div>
+      </div>`;
+    }).join('');
     return `<div class="prog-row">
       <div class="prog-top"><span class="prog-name">${v.name}</span><span class="prog-pct" style="color:${v.color}">${p}%</span></div>
       <div class="prog-bar"><div class="fill" style="width:${p}%;background:${v.color}"></div></div>
-      <div class="prog-desc">${targets[k]}</div>
-      <div class="prog-btns">${[0,25,50,75,100].map(v2=>`<button class="prog-btn ${p===v2?'active':''}" data-sub="${k}" data-p="${v2}" style="${p===v2?'background:'+v.color+';color:#fff':''}">${v2}%</button>`).join('')}</div>
+      <div class="prog-desc">共 ${parts.length} 个部分 · 点击下方按钮更新各部分进度</div>
+      <div class="prog-parts">${partsHtml}</div>
     </div>`;
   }).join('');
 }
 document.addEventListener('click',e=>{
-  const btn = e.target.closest('.prog-btn');
-  if(btn){ DB.progress[btn.dataset.sub]=+btn.dataset.p; saveStore(); renderProgress(); renderSubjectCards(); }
+  const btn = e.target.closest('.pp-btn');
+  if(btn){
+    const sub = btn.dataset.sub, part = btn.dataset.part, p = +btn.dataset.p;
+    if(!DB.progress[sub]) DB.progress[sub] = {};
+    DB.progress[sub][part] = p;
+    saveStore(); renderProgress(); renderSubjectCards();
+  }
 });
 
 /* ---- scores ---- */
