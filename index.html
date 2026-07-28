@@ -109,6 +109,9 @@
   .nav-item.active{background:linear-gradient(135deg,rgba(125,211,252,.15),rgba(251,207,232,.15));color:var(--text);border:1px solid rgba(125,211,252,.3)}
   .nav-item .ni{font-size:16px;width:20px;text-align:center}
   .nav-item .badge{margin-left:auto;font-size:10px;background:var(--primary);color:#fff;padding:1px 7px;border-radius:10px;font-weight:600}
+  .nav-group{margin-top:14px}
+  .nav-group:first-of-type{margin-top:0}
+  .nav-group-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 12px 6px;user-select:none}
   .nav-spacer{flex:1}
   .nav-foot{font-size:10px;color:var(--text3);padding:10px;text-align:center;border-top:1px solid var(--border);margin-top:10px}
 
@@ -131,6 +134,8 @@
     .sidebar-nav .nav-logo{display:none}
     .nav-spacer{display:none}
     .nav-foot{display:none}
+    .nav-group{margin-top:0}
+    .nav-group-title{display:none}
     .nav-item{white-space:nowrap;padding:8px 14px}
     .content{padding:16px 16px 32px}
   }
@@ -360,13 +365,26 @@
       <div class="logo">研</div>
       <div class="txt">考研工作台<small>应用统计 · 26考研</small></div>
     </div>
-    <button class="nav-item active" data-page="schedule"><span class="ni">⌂</span> 日程任务</button>
-    <button class="nav-item" data-page="overview"><span class="ni">◈</span> 学习概览</button>
-    <button class="nav-item" data-page="progress"><span class="ni">◎</span> 复习进度</button>
-    <button class="nav-item" data-page="scores"><span class="ni">★</span> 模考成绩</button>
-    <button class="nav-item" data-page="notes"><span class="ni">✎</span> 复盘笔记</button>
+
+    <div class="nav-group">
+      <div class="nav-group-title">日常备考</div>
+      <button class="nav-item active" data-page="schedule"><span class="ni">⌂</span> 日程任务</button>
+      <button class="nav-item" data-page="notes"><span class="ni">✎</span> 复盘笔记</button>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">数据统计</div>
+      <button class="nav-item" data-page="overview"><span class="ni">◈</span> 学习概览</button>
+      <button class="nav-item" data-page="progress"><span class="ni">◎</span> 复习进度</button>
+      <button class="nav-item" data-page="scores"><span class="ni">★</span> 模考成绩</button>
+    </div>
+
     <div class="nav-spacer"></div>
-    <button class="nav-item" data-page="settings"><span class="ni">⚙</span> 设置备份</button>
+
+    <div class="nav-group">
+      <div class="nav-group-title">系统</div>
+      <button class="nav-item" data-page="settings"><span class="ni">⚙</span> 设置备份</button>
+    </div>
     <div class="nav-foot">数据存本地<br>建议每周备份</div>
   </nav>
 
