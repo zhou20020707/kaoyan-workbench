@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#0f1117">
+<meta name="theme-color" content="#6ba6ff">
 <meta name="description" content="考研备考日程工作台 · 应用统计">
 <title>考研备考工作台 · 应用统计</title>
 
@@ -22,12 +22,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root{
-    --bg:#0f1117; --bg2:#171a23; --card:#1e2230; --card2:#262b3d;
-    --border:#2e3447; --text:#e5e9f0; --text2:#9ca3b8; --text3:#6b7280;
-    --primary:#6366f1; --primary2:#818cf8; --accent:#10b981; --warn:#f59e0b;
-    --danger:#ef4444; --info:#3b82f6; --pink:#ec4899;
-    --math:#6366f1; --eng:#10b981; --pol:#f59e0b; --stat:#ec4899;
-    --radius:14px; --shadow:0 4px 24px rgba(0,0,0,.35);
+    --bg:#f0f4ff; --bg2:#e8f0ff; --card:#ffffff; --card2:#f5f8ff;
+    --border:#d6e0f5; --text:#3a4a6b; --text2:#7a89a8; --text3:#a8b4cc;
+    --primary:#6ba6ff; --primary2:#8bb8ff; --accent:#ff7eb3; --warn:#ffa94d;
+    --danger:#ff6b8a; --info:#6ba6ff; --pink:#ff7eb3;
+    --math:#6ba6ff; --eng:#7ed4a8; --pol:#ffa94d; --stat:#ff7eb3;
+    --grad:linear-gradient(135deg,#6ba6ff,#ff7eb3);
+    --radius:14px; --shadow:0 4px 24px rgba(107,166,255,.15);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
@@ -36,12 +37,12 @@
   button{font-family:inherit;cursor:pointer;border:none;outline:none}
   ::-webkit-scrollbar{width:8px;height:8px}
   ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-  ::-webkit-scrollbar-thumb:hover{background:#3a4258}
+  ::-webkit-scrollbar-thumb{background:#c8d6f0;border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:#a8bce8}
 
   /* ---------- 顶部 ---------- */
   .topbar{
-    background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(236,72,153,.12));
+    background:linear-gradient(135deg,rgba(107,166,255,.15),rgba(255,126,179,.12));
     border-bottom:1px solid var(--border);
     padding:18px 32px;
     display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
@@ -49,9 +50,9 @@
   .topbar .title{display:flex;align-items:center;gap:14px}
   .topbar .title .logo{
     width:44px;height:44px;border-radius:12px;
-    background:linear-gradient(135deg,var(--primary),var(--pink));
+    background:var(--grad);
     display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;
-    box-shadow:0 4px 14px rgba(99,102,241,.4);
+    box-shadow:0 4px 14px rgba(107,166,255,.4);
   }
   .topbar h1{font-size:20px;font-weight:700;letter-spacing:.5px}
   .topbar .sub{font-size:12px;color:var(--text2);margin-top:2px}
@@ -64,7 +65,7 @@
   /* ---------- 倒计时横幅 ---------- */
   .countdown-banner{
     margin:20px 32px 0;
-    background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#ec4899 100%);
+    background:linear-gradient(135deg,#6ba6ff 0%,#9b8cff 50%,#ff7eb3 100%);
     border-radius:var(--radius);
     padding:26px 32px;
     display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
@@ -184,7 +185,7 @@
   }
   .cal-cell:hover{background:var(--card2);border-color:var(--border)}
   .cal-cell.other{opacity:.3}
-  .cal-cell.today{border-color:var(--primary);background:rgba(99,102,241,.12);font-weight:700;color:var(--primary2)}
+  .cal-cell.today{border-color:var(--primary);background:rgba(107,166,255,.12);font-weight:700;color:var(--primary)}
   .cal-cell.selected{background:var(--primary);color:#fff;font-weight:700}
   .cal-cell.selected .dot{background:#fff!important}
   .cal-cell .dot{
@@ -224,10 +225,10 @@
   .task-item .task-meta .tag{
     padding:1px 7px;border-radius:4px;font-size:10px;font-weight:600;
   }
-  .tag-math{background:rgba(99,102,241,.18);color:var(--math)}
+  .tag-math{background:rgba(107,166,255,.18);color:var(--math)}
   .tag-eng{background:rgba(16,185,129,.18);color:var(--eng)}
   .tag-pol{background:rgba(245,158,11,.18);color:var(--pol)}
-  .tag-stat{background:rgba(236,72,153,.18);color:var(--stat)}
+  .tag-stat{background:rgba(255,126,179,.18);color:var(--stat)}
   .task-item .duration{font-size:12px;color:var(--text2);font-weight:600}
   .task-item .del{color:var(--text3);font-size:16px;padding:0 4px;opacity:0;transition:opacity .15s}
   .task-item:hover .del{opacity:1}
@@ -302,7 +303,7 @@
   #iosGuide{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px}
   #iosGuide .guide-mask{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
   #iosGuide .guide-card{
-    position:relative;background:linear-gradient(160deg,#1a2030,#222840);border:1px solid var(--border);
+    position:relative;background:linear-gradient(160deg,#ffffff,#f0f4ff);border:1px solid var(--border);
     border-radius:20px;padding:28px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);
     animation:guideIn .35s ease;
   }
@@ -402,7 +403,7 @@
           <!-- 日历 -->
           <div class="card">
             <div class="card-head">
-              <h2><span class="icon" style="background:rgba(99,102,241,.2)">📅</span>备考日历</h2>
+              <h2><span class="icon" style="background:rgba(107,166,255,.2)">📅</span>备考日历</h2>
               <div class="cal-nav">
                 <button class="btn sm" id="prevMonth">‹</button>
                 <span class="ym" id="calYM">—</span>
@@ -453,7 +454,7 @@
         <!-- 当日笔记 -->
         <div class="card" style="margin-top:20px">
           <div class="card-head">
-            <h2><span class="icon" style="background:rgba(236,72,153,.2)">📝</span>当日复盘笔记</h2>
+            <h2><span class="icon" style="background:rgba(255,126,179,.2)">📝</span>当日复盘笔记</h2>
             <div class="actions"><span class="section-tip" id="noteHint">自动保存</span></div>
           </div>
           <textarea class="note-area" id="dayNote" placeholder="今天学到了什么？哪里卡住了？明天重点要攻克什么？"></textarea>
@@ -467,7 +468,7 @@
           <div class="desc">今日数据、科目时长分布、近7天学习趋势</div>
         </div>
         <div class="card">
-          <div class="card-head"><h2><span class="icon" style="background:rgba(99,102,241,.2)">⚡</span>今日学习概览</h2></div>
+          <div class="card-head"><h2><span class="icon" style="background:rgba(107,166,255,.2)">⚡</span>今日学习概览</h2></div>
           <div class="stat-grid">
             <div class="stat-box accent"><div class="label">今日时长</div><div class="value" id="todayHours">0</div><div class="sub">小时</div></div>
             <div class="stat-box primary"><div class="label">完成任务</div><div class="value" id="todayDone">0/0</div><div class="sub">个</div></div>
@@ -495,7 +496,7 @@
           <div class="desc">按科目追踪整体复习进度，点击按钮更新百分比</div>
         </div>
         <div class="card">
-          <div class="card-head"><h2><span class="icon" style="background:rgba(236,72,153,.2)">🎯</span>各科复习进度</h2></div>
+          <div class="card-head"><h2><span class="icon" style="background:rgba(255,126,179,.2)">🎯</span>各科复习进度</h2></div>
           <div class="subject-list" id="progressList"></div>
         </div>
       </div>
@@ -531,7 +532,7 @@
           <div class="desc">回顾每日学习笔记，点击日期可跳转到该日编辑</div>
         </div>
         <div class="card">
-          <div class="card-head"><h2><span class="icon" style="background:rgba(236,72,153,.2)">📓</span>历史笔记</h2></div>
+          <div class="card-head"><h2><span class="icon" style="background:rgba(255,126,179,.2)">📓</span>历史笔记</h2></div>
           <div id="notesList" class="task-list"></div>
         </div>
       </div>
@@ -543,7 +544,7 @@
           <div class="desc">导出备份、导入恢复、重置数据</div>
         </div>
         <div class="card">
-          <div class="card-head"><h2><span class="icon" style="background:rgba(99,102,241,.2)">💾</span>数据管理</h2></div>
+          <div class="card-head"><h2><span class="icon" style="background:rgba(107,166,255,.2)">💾</span>数据管理</h2></div>
           <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.8">
             所有数据自动保存在浏览器本地。建议每周导出一次备份文件。<br>
             换设备时，用「导入数据」功能恢复。
@@ -614,10 +615,10 @@ const EXAM_DATE = new Date('2026-12-19');   // 预估开考日（周六）
 const START_DATE = new Date('2026-07-28');  // 备考起始日（今日）
 
 const SUBJECTS = {
-  math:{name:'数三',color:'#6366f1',cls:'tag-math',full:150},
+  math:{name:'数三',color:'#6ba6ff',cls:'tag-math',full:150},
   eng: {name:'英二',color:'#10b981',cls:'tag-eng',full:100},
   pol: {name:'政治',color:'#f59e0b',cls:'tag-pol',full:100},
-  stat:{name:'统计学',color:'#ec4899',cls:'tag-stat',full:150},
+  stat:{name:'统计学',color:'#ff7eb3',cls:'tag-stat',full:150},
 };
 
 const QUOTES = [
@@ -918,11 +919,11 @@ function renderSubjectChart(subjH){
     type:'doughnut',
     data:{
       labels:Object.values(SUBJECTS).map(s=>s.name),
-      datasets:[{data,backgroundColor:Object.values(SUBJECTS).map(s=>s.color),borderColor:'#1e2230',borderWidth:3}]
+      datasets:[{data,backgroundColor:Object.values(SUBJECTS).map(s=>s.color),borderColor:'#ffffff',borderWidth:3}]
     },
     options:{
       responsive:true,maintainAspectRatio:false,cutout:'62%',
-      plugins:{legend:{position:'bottom',labels:{color:'#9ca3b8',font:{size:11},padding:10,boxWidth:12}}}
+      plugins:{legend:{position:'bottom',labels:{color:'#7a89a8',font:{size:11},padding:10,boxWidth:12}}}
     }
   });
 }
@@ -942,21 +943,21 @@ function renderTrendChart(trend){
   const ctx = document.getElementById('trendChart');
   if(trendChart) trendChart.destroy();
   const grad = ctx.getContext('2d').createLinearGradient(0,0,0,220);
-  grad.addColorStop(0,'rgba(99,102,241,.4)');
-  grad.addColorStop(1,'rgba(99,102,241,0)');
+  grad.addColorStop(0,'rgba(107,166,255,.4)');
+  grad.addColorStop(1,'rgba(107,166,255,0)');
   trendChart = new Chart(ctx,{
     type:'line',
     data:{labels:trend.map(t=>t.ds),datasets:[{
       label:'学习时长(h)',data:trend.map(t=>t.h),
-      borderColor:'#6366f1',backgroundColor:grad,fill:true,tension:.35,
-      pointBackgroundColor:'#818cf8',pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:4
+      borderColor:'#6ba6ff',backgroundColor:grad,fill:true,tension:.35,
+      pointBackgroundColor:'#8bb8ff',pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:4
     }]},
     options:{
       responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
       scales:{
-        x:{grid:{display:false},ticks:{color:'#6b7280',font:{size:11}}},
-        y:{beginAtZero:true,grid:{color:'#2e3447'},ticks:{color:'#6b7280',font:{size:11}}}
+        x:{grid:{display:false},ticks:{color:'#7a89a8',font:{size:11}}},
+        y:{beginAtZero:true,grid:{color:'#e0e8f5'},ticks:{color:'#7a89a8',font:{size:11}}}
       }
     }
   });
