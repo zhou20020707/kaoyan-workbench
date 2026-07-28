@@ -1,0 +1,17 @@
+{
+  "name": "考研备考工作台 · 应用统计",
+  "short_name": "考研工作台",
+  "description": "考研备考日程工作台：日历任务、倒计时、学习时长统计、复习进度追踪、模考成绩记录。应用统计方向（数三/英二/政治/统计学）。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#7DD3FC",
+  "theme_color": "#7DD3FC",
+  "lang": "zh-CN",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
